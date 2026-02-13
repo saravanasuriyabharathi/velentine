@@ -16,7 +16,10 @@ body {
     align-items: center;
 }
 
+/* Screens */
 .screen {
+    position: relative;
+    z-index: 1;
     text-align: center;
     max-width: 700px;
     padding: 40px;
@@ -58,9 +61,10 @@ button:hover {
 
 /* Floating hearts */
 .heart {
-    position: absolute;
+    position: fixed;
     font-size: 28px;
     cursor: pointer;
+    z-index: 5;
     animation: floatUp linear forwards;
 }
 
@@ -69,13 +73,12 @@ button:hover {
     to { transform: translateY(-10vh); opacity: 0; }
 }
 
-/* Final buttons container */
+/* Final buttons */
 .buttonContainer {
     position: relative;
     height: 120px;
 }
 
-/* No button absolute inside container */
 #noBtn {
     position: absolute;
 }
@@ -87,11 +90,10 @@ video {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;  /* 👈 important change */
-    background: black;    /* fills empty space */
+    object-fit: contain;   /* prevents cropping */
+    background: black;
     z-index: 10;
 }
-
 </style>
 </head>
 
@@ -155,7 +157,7 @@ function createHeart() {
     heart.style.left = Math.random() * 90 + "vw";
     heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
 
-    heart.onclick = function () {
+    function collectHeart() {
         score++;
         scoreDisplay.innerText = "Hearts: " + score + " / 5";
         heart.remove();
@@ -163,7 +165,10 @@ function createHeart() {
         if (score >= maxScore) {
             nextLevel(1);
         }
-    };
+    }
+
+    heart.addEventListener("click", collectHeart);
+    heart.addEventListener("touchstart", collectHeart);
 
     document.body.appendChild(heart);
 
